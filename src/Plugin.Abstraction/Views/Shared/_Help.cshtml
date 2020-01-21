@@ -1,0 +1,275 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@using System.Reflection
+@using Plugin.Abstraction.HelpTopic
+@model Plugin.Abstraction.HelpTopic.HelpTopicModel
+
+
+@{
+    var topic = Model.Topics.First(x => x.ID == Model.DisplayID);
+}
+
+
+
+
+
+<html lang="en">
+<head>
+    <style>
+        body {
+            /*background-color: powderblue;*/
+        }
+
+        h1 {
+            font-size: 1.5em
+        }
+
+        h2 {
+            font-size: 1.17em
+        }
+
+        table, td, th {
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+    </style>
+
+    <title>@topic.Title</title>
+</head>
+<body>
+    <div>
+    <h1>@topic.Title</h1>
+
+        @{
+            var version = Model.GetControllerVersion(topic);
+            if (version != null)
+            {
+                <div>
+                    Version: @Html.Raw(Model.InsertResources(version.Version)) Last updated:@Html.Raw(version.LastUpdated)
+                    <br />@Html.Raw(Model.InsertResources(version.ReleaseHisotry))
+                </div>
+            }
+        }
+
+
+        @{
+            var summary = Model.GetSummary(topic);
+            if (summary != null)
+            {
+                <h2>Summary:</h2>
+                <div>@Html.Raw(summary)</div>
+
+            }
+        }
+
+        @{
+            //controller actions
+            var actions = Model.GetControllerActions(topic);
+            if (actions != null && actions.Count > 0)
+            {
+                <h2>Actions:</h2>
+                <table>
+                    <tr>
+                        <th>No.</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+
+                    @for (var i = 0; i < actions.Count; i++)
+                    {
+                        var t = actions[i];
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <a href="@Model.HelpURL?id=@t.ID">@t.Title</a>
+                            </td>
+                            <td>
+                                @Html.Raw(Model.GetSummary(t))
+                            </td>
+
+                        </tr>
+                    }
+                </table>
+            }
+
+        }
+        @{
+            //type properties
+            var properties = Model.GetProperties(topic);
+            if (properties.Count > 0)
+            {
+                <h2>Properties:</h2>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>See also</th>
+                    </tr>
+
+                    @foreach (var t in properties)
+                    {
+                        <tr>
+                            <td>
+                                @Html.Raw(t.Name)
+                            </td>
+                            <td>
+                                @Html.Raw(t.PropertyType.Name)
+                            </td>
+                            <td>
+                                @Html.Raw(t.Summary)
+                            </td>
+                            <td>
+                                @if (t.RelatedTypes != null)
+                                {
+                                    foreach (var rt in t.RelatedTypes)
+                                    {
+                                        <div>
+                                            <a href="@Model.HelpURL?id=@rt.FullName">@rt.Name</a>
+                                        </div>
+
+                                    }
+                                }
+
+
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+
+        }
+
+        @{
+            //response calling methods
+            var methods = Model.GetResponseCallingActions(topic);
+            if (methods != null && methods.Count > 0)
+            {
+                <h2>Created by:</h2>
+                <table>
+                    <tr>
+                        <th>Method name</th>
+                        <th>Description</th>
+                    </tr>
+
+                    @foreach (var t in methods)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@Model.HelpURL?id=@t.ID">@t.Title</a>
+                            </td>
+                            <td>
+                                @Html.Raw(Model.GetSummary(t))
+                            </td>
+
+                        </tr>
+                    }
+                </table>
+            }
+
+
+
+        }
+
+        @{
+            //request calling actions
+            var request = Model.GetActionRequest(topic);
+            if (request != null)
+            {
+                <h2>Action request:</h2>
+                <div> <a href="@Model.HelpURL?id=@request.ID">@request.Title</a></div>
+            }
+        }
+
+        @{
+            //response calling actions
+            var response = Model.GetActionResponse(topic);
+            if (response != null)
+            {
+                <h2>Action response:</h2>
+                <div> <a href="@Model.HelpURL?id=@response.ID">@response.Title</a></div>
+            }
+        }
+
+
+
+        @{
+            //action calling controller
+            var controller = Model.GetActionController(topic);
+            if (controller != null)
+            {
+                <h2>API:</h2>
+                <div> <a href="@Model.HelpURL?id=@controller.ID">@controller.Title</a></div>
+            }
+
+        }
+
+        @{
+            //Uses
+            var uses = Model.GetUses(topic);
+            if (uses.Count > 0)
+            {
+                <h2>Uses:</h2>
+                foreach (var t in uses)
+                {
+                    <div>
+                        <a href="@Model.HelpURL?id=@t.ID">@t.Title</a>
+
+                    </div>
+                }
+            }
+
+        }
+
+        @{
+            //Used by
+            var usedBy = Model.GetUsedBy(topic);
+            if (usedBy.Count > 0)
+            {
+                <h2>Used by:</h2>
+                foreach (var t in usedBy)
+                {
+                    <div>
+                        <a href="@Model.HelpURL?id=@t.ID">@t.Title</a>
+
+                    </div>
+                }
+            }
+
+        }
+
+
+        @{
+            //external links
+            var externalLinks = Model.GetExternalLinks(topic);
+            if (externalLinks.Count > 0)
+            {
+                <h2>External links</h2>
+                foreach (var t in externalLinks)
+                {
+                    <div>
+                        @Html.Raw(Model.GetHtmlLinkDetails(t))
+                    </div>
+                }
+            }
+
+        }
+
+    </div>
+
+</body>
+</html>
+
+
+
