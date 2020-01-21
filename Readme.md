@@ -12,18 +12,18 @@ There are four projects in the source code:
 
 ## Creating a new plugin
 You can use the provided demo as a template for your new plugins. ALternatively,  The following steps provide a guide to create a new plugin:
-1- Create a new project named AECC.[pluginname] (e.g. AECC.Plugin1) using ìASP.Net core web appî targeting  core 2.1. The wwwroot included can be removed.
-2- Add a reference to Plugin.Abstraction project.
-3- Add <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath> line to the <PropertyGroup> in the project file. 
-4- Add PlugInServices.cs from the templates folder to the project.
-5- Replace Startup.cs with the one in the templates folder.
-6- Under the controllers folder, add the Plugin1Controller.cs from the templates folder and rename the class as [pluginname]Controller.
-7- Under the Views folder, add a new folder named [pluginname] and inside add a link to _Help.cshtml Plugin.Abstraction and add Help.cshtml from the templates folder. 
+- Create a new project named AECC.[pluginname] (e.g. AECC.Plugin1) using ‚ÄúASP.Net core web app‚Äù targeting  core 2.1. The wwwroot included can be removed.
+- Add a reference to Plugin.Abstraction project.
+- Add <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath> line to the <PropertyGroup> in the project file. 
+- Add PlugInServices.cs from the templates folder to the project.
+- Replace Startup.cs with the one in the templates folder.
+- Under the controllers folder, add the Plugin1Controller.cs from the templates folder and rename the class as [pluginname]Controller.
+- Under the Views folder, add a new folder named [pluginname] and inside add a link to _Help.cshtml Plugin.Abstraction and add Help.cshtml from the templates folder. 
 
 ## Deployment of plugin
-1- Build your plugin.
-2- Copy the plugin complied files in the bin folder and any dependencies to a folder named AECC.[pluginname] under libs found in wwwroot of the main service.
-3- Copy any help files required for the plugin documentation to wwwroot\libs\AECC.[pluginname]\resources\help.   
-4- Publish the libs folder and restart the main service.
+- Build your plugin.
+- Copy the plugin complied files in the bin folder and any dependencies to a folder named AECC.[pluginname] under libs found in wwwroot of the main service.
+- Copy any help files required for the plugin documentation to wwwroot\libs\AECC.[pluginname]\resources\help.   
+- Publish the libs folder and restart the main service.
 
-To test the service go, call an action on the plugin controller using http://.../api/plugin1/[action]
+To test the service go, call an action on the plugin controller using http://.../api/[controllername]/[action]
